@@ -1,0 +1,16 @@
+<!-- templates/your_app/your_template.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Sticker Image</title>
+</head>
+<body>
+    {% if sticker.image %}
+        <img src="{{ sticker.image.url }}" alt="Sticker Image">
+    {% else %}
+        <p>No image uploaded.</p>
+    {% endif %}
+</body>
+</html>
