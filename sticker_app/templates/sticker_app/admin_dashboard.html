@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<!-- Tab navigation -->
+<div class="tabs">
+    <a href="{% url 'stickers_view' %}" class="tablinks" id="stickersTab">Stickers</a> 
+    <a href="{% url 'duplicates_view' %}" class="tablinks" id="duplicatesTab">Duplicate Issues</a>
+    <a href="{% url 'users_view' %}" class="tablinks" id="usersTab">Users</a>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* General styles for the dashboard */
+    h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .tabs {
+        display: flex;
+        justify-content: space-around;
+        background-color: #f1f1f1;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Style for the individual tab links */
+    .tablinks {
+        display: inline-block;
+        padding: 12px 24px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        background-color: #ddd;
+        border: 1px solid #ccc;
+        border-radius: 8px 8px 0 0;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Hover effect for tab links */
+    .tablinks:hover {
+        background-color: #ddd;
+        color: #0056b3;
+    }
+
+    /* Active tab style */
+    .tablinks.active {
+        background-color: #0056b3;
+        color: white;
+        font-weight: bold;
+    }
+
+    /* Responsive layout for tabs */
+    @media screen and (max-width: 600px) {
+        .tabs {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tablinks {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Wait for the DOM to fully load before running the script
+    document.addEventListener('DOMContentLoaded', function () {
+        // Function to highlight the active tab
+        function highlightActiveTab() {
+            var currentUrl = window.location.pathname;
+            var tabs = document.querySelectorAll('.tablinks');
+
+            tabs.forEach(function(tab) {
+                if (tab.href === window.location.href) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+        }
+
+        // Call the function to set the active tab on page load
+        highlightActiveTab();
+    });
+</script>
+{% endblock %}

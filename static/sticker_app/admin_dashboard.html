@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'sticker_app/admin_dashboard.css' %}">
+    <title>Admin Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f4f4f4; }
+        .delete-button { background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+        .delete-button:hover { background-color: darkred; }
+    </style>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    
+    <h2>Stickers List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Uploaded At</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th>Priority</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sticker in stickers %}
+            <tr>
+                <td>{{ sticker.id }}</td>
+                <td><img src="{{ sticker.image.url }}" alt="Sticker Image" style="width: 100px; height: auto;"></td>
+                <td>{{ sticker.uploaded_at }}</td>
+                <td>{{ sticker.description }}</td>
+                <td>{{ sticker.category }}</td>
+                <td>{{ sticker.location }}</td>
+                <td>{{ sticker.priority }}</td>
+                <td>
+                    <form action="{% url 'delete_sticker' sticker.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-button">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8">No stickers available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h2>Users List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    <form action="{% url 'delete_user' user.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-button">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No users available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Reported Issues</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Report ID</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for issue in issues %}
+            <tr>
+                <td>{{ issue.user.id }}</td>
+                <td>{{ issue.report_id }}</td>
+                <td>{{ issue.category }}</td>
+                <td>{{ issue.description }}</td>
+                <td>{{ issue.priority }}</td>
+                <td>{{ issue.status }}</td>
+                <td>{{ issue.created_at }}</td>
+                <td>{{ issue.updated_at }}</td>
+                <td>
+                    <!-- Add any action buttons here if needed -->
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9">No issues reported</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

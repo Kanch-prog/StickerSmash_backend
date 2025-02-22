@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}User Management{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Users</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Ward Assignment</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    {% if user.groups.all|length > 0 %}
+                        {{ user.groups.all.0.name }}
+                    {% else %}
+                        No Role
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.groups.all.0.name == "Ward_Admin" %}
+                    <form method="POST" action="{% url 'assign_ward_to_admin' user.id %}">
+                        {% csrf_token %}
+                        <select name="ward" class="form-select form-select-sm" required>
+                            {% for ward_value, ward_name in wards %}
+                                <option value="{{ ward_value }}" {% if user.adminprofile.ward == ward_value %}selected{% endif %}>
+                                    {{ ward_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-primary btn-sm mt-2">Assign</button>
+                    </form>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    <form action="{% url 'delete_user' user.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Duplicate Issues
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Duplicate Issues</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th>Priority</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sticker1, sticker2 in duplicates %}
+            <tr class="table-secondary">
+                <td colspan="7" class="text-center font-weight-bold">Duplicate Issues (ID: {{ sticker1.id }} and {{ sticker2.id }})</td>
+            </tr>
+            <tr>
+                <td>{{ sticker1.id }}</td>
+                <td>{{ sticker1.user.username }}</td>
+                <td>{{ sticker1.description }}</td>
+                <td>{{ sticker1.category }}</td>
+                <td>Latitude: {{ sticker1.latitude }}, Longitude: {{ sticker1.longitude }}</td>
+                <td>{{ sticker1.priority }}</td>
+                <td>
+                    <form action="{% url 'delete_sticker' sticker1.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ sticker2.id }}</td>
+                <td>{{ sticker2.user.username }}</td>
+                <td>{{ sticker2.description }}</td>
+                <td>{{ sticker2.category }}</td>
+                <td>Latitude: {{ sticker2.latitude }}, Longitude: {{ sticker2.longitude }}</td>
+                <td>{{ sticker2.priority }}</td>
+                <td>
+                    <form action="{% url 'delete_sticker' sticker2.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No duplicates found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% block extra_css %}
+<style>
+    /* Additional custom styling for the table */
+    table {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    /* Styling for the "No duplicates found" message */
+    td[colspan="7"] {
+        text-align: center;
+        font-size: 16px;
+        color: #888;
+    }
+
+    /* Styling for the duplicate issue header row */
+    tr[class="table-secondary"] {
+        background-color: #f0f0f0;
+        font-weight: bold;
+    }
+
+    /* Styling for the delete button */
+    .btn-danger {
+        font-size: 14px;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    /* Form styling */
+    form {
+        margin: 0;
+        display: inline-block;
+    }
+</style>
+{% endblock %}
+{% endblock %}

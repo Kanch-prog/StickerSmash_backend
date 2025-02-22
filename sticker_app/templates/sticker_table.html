@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Stickers Management
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Stickers</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Image</th>
+                <th>Uploaded At</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th>Ward</th>  <!-- New column for Ward -->
+                <th>Priority</th>
+                <th>Action</th>
+                <th>Update Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sticker in stickers %}
+            <tr>
+                <td>{{ sticker.id }}</td>
+                <td>{{ sticker.user.id }}</td>
+                <td><img src="{{ sticker.image.url }}" alt="Sticker Image" style="width: 100px; height: auto;"></td>
+                <td>{{ sticker.updated_at }}</td>
+                <td>{{ sticker.description }}</td>
+                <td>{{ sticker.category }}</td>
+                <td>
+                    {% if sticker.latitude and sticker.longitude %}
+                        Latitude: {{ sticker.latitude }}, Longitude: {{ sticker.longitude }}
+                    {% else %}
+                        No GPS location available
+                    {% endif %}
+                </td>
+                <td>
+                    {% if sticker.ward %}
+                        {{ sticker.ward }}
+                    {% else %}
+                        No ward available
+                    {% endif %}
+                </td>
+                <td>{{ sticker.priority }}</td>
+                <td>
+                    <form action="{% url 'delete_sticker' sticker.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="{% url 'update_status' sticker.id %}" method="post">
+                        {% csrf_token %}
+                        <select name="status" class="form-select form-select-sm">
+                            <option value="viewed" {% if sticker.status == "viewed" %}selected{% endif %}>Viewed</option>
+                            <option value="in progress" {% if sticker.status == "in progress" %}selected{% endif %}>In Progress</option>
+                            <option value="solved" {% if sticker.status == "solved" %}selected{% endif %}>Solved</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary btn-sm mt-2">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="11" class="text-center">No stickers available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        
+    </table>
+</div>
+
+{% block extra_css %}
+<style>
+    /* Additional custom styling for the table */
+    table {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    td img {
+        width: 100px;
+        height: auto;
+        border-radius: 5px;
+    }
+
+    td br {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    /* Styling for the "No stickers available" message */
+    td[colspan="10"] {
+        text-align: center;
+        font-size: 16px;
+        color: #888;
+    }
+</style>
+{% endblock %}
+{% endblock %}
